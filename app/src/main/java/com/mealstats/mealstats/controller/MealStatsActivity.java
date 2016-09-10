@@ -3,6 +3,7 @@ package com.mealstats.mealstats.controller;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
@@ -18,7 +19,11 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.mealstats.mealstats.R;
+import com.mealstats.mealstats.services.GetNutritionalInfo;
 import com.mealstats.mealstats.util.Constants;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class MealStatsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,6 +51,15 @@ public class MealStatsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        GetNutritionalInfo infoService = new GetNutritionalInfo(this);
+        String filePath = Environment.getExternalStorageDirectory()+"/DCIM/Camera/P_20160909_134438.jpg";
+        try {
+            infoService.sendRequest(filePath,
+                                    (response -> Log.d("deb_r", response.toString())),
+                                    (error -> Log.d("deb_e", error.toString())));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void dispatchTakePictureIntent() {
