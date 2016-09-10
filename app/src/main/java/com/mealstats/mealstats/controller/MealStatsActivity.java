@@ -1,10 +1,11 @@
-package com.mealstats.mealstats;
+package com.mealstats.mealstats.controller;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +15,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+
+import com.mealstats.mealstats.R;
+import com.mealstats.mealstats.util.Constants;
 
 public class MealStatsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -29,8 +34,7 @@ public class MealStatsActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, 0);
+                dispatchTakePictureIntent();
             }
         });
 
@@ -44,12 +48,25 @@ public class MealStatsActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
-        super.onActivityResult(requestCode, resultCode, data);
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
+        }
+    }
 
-        Bitmap bp = (Bitmap) data.getExtras().get("data");
-        //iv.setImageBitmap(bp);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+            ImageView imageView = (ImageView) findViewById(R.id.taken_picture_image_view);
+
+            //Log.d("Size", "" + imageBitmap.getHeight() + " " + imageBitmap.getWidth());
+
+            imageView.setImageBitmap(imageBitmap);
+        }
     }
 
     @Override
@@ -91,16 +108,16 @@ public class MealStatsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            dispatchTakePictureIntent();
         } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_rate) {
+
+        } else if (id == R.id.nav_about) {
 
         }
 
