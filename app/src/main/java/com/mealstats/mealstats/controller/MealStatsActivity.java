@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
@@ -22,9 +23,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mealstats.mealstats.R;
+import com.mealstats.mealstats.services.GetNutritionalInfo;
 import com.mealstats.mealstats.util.Constants;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -102,9 +105,26 @@ public class MealStatsActivity extends AppCompatActivity
             // images
             options.inSampleSize = 4;
             final Bitmap bitmap = BitmapFactory.decodeFile(takenPictureUri.getPath(), options);
-            Log.d("img", takenPictureUri.getPath());
+            Log.d("img1", takenPictureUri.getPath());
             takenPictureImageView.setImageBitmap(bitmap);
+
+            processImage();
         } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void processImage() {
+        GetNutritionalInfo infoService = new GetNutritionalInfo(this);
+        String filePath = takenPictureUri.getPath();
+
+        Log.d("img1", filePath);
+
+        try {
+            infoService.sendRequest(filePath,
+                    (response -> Log.d("deb_r", response.toString())),
+                    (error -> Log.d("deb_e", error.toString())));
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -140,7 +160,7 @@ public class MealStatsActivity extends AppCompatActivity
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d("img", "Failed create "
+                Log.d("img1", "Failed create "
                         + Constants.IMAGE_DIRECTORY_NAME + " directory");
                 return null;
             }
