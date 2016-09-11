@@ -1,7 +1,10 @@
 package com.mealstats.mealstats.controller;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -16,12 +19,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.mealstats.mealstats.R;
 import com.mealstats.mealstats.util.Constants;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class MealStatsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Uri takenPictureUri;
+    private ImageView takenPictureImageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,28 +59,103 @@ public class MealStatsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        takenPictureImageView = (ImageView) findViewById(R.id.taken_picture_image_view);
+    }
+
+    private boolean isDeviceSupportCamera() {
+        if (getApplicationContext().getPackageManager().hasSystemFeature(
+                PackageManager.FEATURE_CAMERA)) {
+            return true;
+        }
+        return false;
     }
 
     private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
-        }
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        takenPictureUri = getOutputMediaFileUri();
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, takenPictureUri);
+        startActivityForResult(intent, Constants.REQUEST_IMAGE_CAPTURE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-
-            ImageView imageView = (ImageView) findViewById(R.id.taken_picture_image_view);
-
-            //Log.d("Size", "" + imageBitmap.getHeight() + " " + imageBitmap.getWidth());
-
-            imageView.setImageBitmap(imageBitmap);
+        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                // successfully captured the image
+                // display it in image view
+                previewCapturedImage();
+            }
         }
     }
+
+    /*
+     * Display image from a path to ImageView
+     */
+    private void previewCapturedImage() {
+        try {
+            takenPictureImageView.setVisibility(View.VISIBLE);
+            // bimatp factory
+            BitmapFactory.Options options = new BitmapFactory.Options();
+
+            // downsizing image as it throws OutOfMemory Exception for larger
+            // images
+            options.inSampleSize = 4;
+            final Bitmap bitmap = BitmapFactory.decodeFile(takenPictureUri.getPath(), options);
+            Log.d("img", takenPictureUri.getPath());
+            takenPictureImageView.setImageBitmap(bitmap);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(Constants.TAKEN_PICTURE_URI, takenPictureUri);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        takenPictureUri = savedInstanceState.getParcelable(Constants.TAKEN_PICTURE_URI);
+    }
+
+    /**
+     * Creating file uri to store image
+     */
+    public Uri getOutputMediaFileUri() {
+        return Uri.fromFile(getOutputMediaFile());
+    }
+
+    /*
+     * returning image
+     */
+    private File getOutputMediaFile() {
+        // External sdcard location
+        File mediaStorageDir = new File(
+                getExternalCacheDir(),
+                Constants.IMAGE_DIRECTORY_NAME);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("img", "Failed create "
+                        + Constants.IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(new Date());
+        File mediaFile;
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                    + "IMG_" + timeStamp + ".jpg");
+
+        return mediaFile;
+    }
+
 
     @Override
     public void onBackPressed() {
