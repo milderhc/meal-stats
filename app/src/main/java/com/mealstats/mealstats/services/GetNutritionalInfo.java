@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class GetNutritionalInfo {
-    private static String URL = "http://192.168.0.8:8080";
+    private static String URL = "http://192.168.43.28:8080";
     private RequestQueue queue;
 
     public GetNutritionalInfo(Context context){

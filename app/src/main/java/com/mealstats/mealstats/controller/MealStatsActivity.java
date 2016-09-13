@@ -2,11 +2,9 @@ package com.mealstats.mealstats.controller;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -30,9 +28,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 public class MealStatsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -79,7 +74,7 @@ public class MealStatsActivity extends AppCompatActivity
         startActivityForResult(intent, Constants.REQUEST_IMAGE_CAPTURE);
     }
 
-    private void selectImage () {
+    private void selectPicture() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -93,6 +88,9 @@ public class MealStatsActivity extends AppCompatActivity
             if (requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
                 //Preview and process image taken
                 try {
+                    Bitmap bitmap = BitmapFactory.decodeFile(pictureUri.getPath());
+                    compressPicture(bitmap, Constants.COMPRESS_QUALITY);
+
                     previewPicture();
                     processPicture();
                 } catch ( Exception e ) {
@@ -103,12 +101,8 @@ public class MealStatsActivity extends AppCompatActivity
                 //Preview and process image selected
                 try {
                     pictureUri = data.getData();
-                    final Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
-                    File selectedPictureFile = getOutputMediaFile();
-                    FileOutputStream fos = new FileOutputStream(selectedPictureFile);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 50, fos);
-                    fos.close();
-                    pictureUri = Uri.fromFile(selectedPictureFile);
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
+                    compressPicture(bitmap, Constants.COMPRESS_QUALITY);
 
                     previewPicture();
                     processPicture();
@@ -121,14 +115,43 @@ public class MealStatsActivity extends AppCompatActivity
 
     private void previewPicture() throws NullPointerException {
         pictureImageView.setVisibility(View.VISIBLE);
-        // bimatp factory
-        BitmapFactory.Options options = new BitmapFactory.Options();
-
-        // downsizing image as it throws OutOfMemory Exception for larger
-        // images
-        options.inSampleSize = 4;
-        final Bitmap bitmap = BitmapFactory.decodeFile(pictureUri.getPath(), options);
+        Bitmap bitmap = BitmapFactory.decodeFile(pictureUri.getPath());
         pictureImageView.setImageBitmap(bitmap);
+    }
+
+    private void compressPicture (Bitmap bitmap, int quality) throws IOException {
+        File selectedPictureFile = getOutputMediaFile();
+        FileOutputStream fileOutputStream = new FileOutputStream(selectedPictureFile);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, fileOutputStream);
+        fileOutputStream.close();
+        pictureUri = Uri.fromFile(selectedPictureFile);
+    }
+
+    /**
+     * Creates file uri to store image
+     */
+    public Uri getOutputMediaFileUri() {
+        return Uri.fromFile(getOutputMediaFile());
+    }
+
+    /*
+     * Returns saved image
+     */
+    private File getOutputMediaFile() {
+        File mediaStorageDir = new File(
+                getExternalCacheDir(),
+                Constants.PICTURE_DIRECTORY_NAME);
+
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("img1", "Failed create "
+                        + Constants.PICTURE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+
+        return new File(mediaStorageDir.getPath() + Constants.PICTURE_DIRECTORY_NAME + File.separator +
+                Constants.PICTURE_SELECTED_NAME);
     }
 
     private void processPicture() {
@@ -156,40 +179,6 @@ public class MealStatsActivity extends AppCompatActivity
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         pictureUri = savedInstanceState.getParcelable(Constants.PICTURE_URI);
-    }
-
-    /**
-     * Creates file uri to store image
-     */
-    public Uri getOutputMediaFileUri() {
-        return Uri.fromFile(getOutputMediaFile());
-    }
-
-    /*
-     * Returns saved image
-     */
-    private File getOutputMediaFile() {
-        File mediaStorageDir = new File(
-                getExternalCacheDir(),
-                Constants.IMAGE_DIRECTORY_NAME);
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d("img1", "Failed create "
-                        + Constants.IMAGE_DIRECTORY_NAME + " directory");
-                return null;
-            }
-        }
-
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(new Date());
-        File mediaFile;
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                    + "IMG_" + timeStamp + ".jpg");
-
-        return mediaFile;
     }
 
     @Override
@@ -232,7 +221,7 @@ public class MealStatsActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             takePicture();
         } else if (id == R.id.nav_gallery) {
-            selectImage();
+            selectPicture();
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_share) {
