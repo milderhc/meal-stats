@@ -2,11 +2,12 @@ package com.mealstats.mealstats.controller;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
@@ -20,7 +21,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.mealstats.mealstats.R;
 import com.mealstats.mealstats.services.GetNutritionalInfo;
@@ -28,6 +28,8 @@ import com.mealstats.mealstats.util.Constants;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -35,9 +37,8 @@ import java.util.Locale;
 public class MealStatsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Uri takenPictureUri;
-    private ImageView takenPictureImageView;
-
+    private Uri pictureUri;
+    private ImageView pictureImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,7 @@ public class MealStatsActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispatchTakePictureIntent();
+                takePicture();
             }
         });
 
@@ -63,60 +64,76 @@ public class MealStatsActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        takenPictureImageView = (ImageView) findViewById(R.id.taken_picture_image_view);
+        pictureImageView = (ImageView) findViewById(R.id.picture_image_view);
     }
 
-    private boolean isDeviceSupportCamera() {
-        if (getApplicationContext().getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA)) {
-            return true;
-        }
-        return false;
+    private boolean deviceSupportCamera() {
+        return getApplicationContext().getPackageManager().hasSystemFeature(
+                PackageManager.FEATURE_CAMERA);
     }
 
-    private void dispatchTakePictureIntent() {
+    private void takePicture() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        takenPictureUri = getOutputMediaFileUri();
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, takenPictureUri);
+        pictureUri = getOutputMediaFileUri();
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, pictureUri);
         startActivityForResult(intent, Constants.REQUEST_IMAGE_CAPTURE);
+    }
+
+    private void selectImage () {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"),
+                Constants.REQUEST_IMAGE_SELECT);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
-            if (resultCode == RESULT_OK) {
-                // successfully captured the image
-                // display it in image view
-                previewCapturedImage();
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
+                //Preview and process image taken
+                try {
+                    previewPicture();
+                    processPicture();
+                } catch ( Exception e ) {
+                    e.printStackTrace();
+                }
+            } if (requestCode == Constants.REQUEST_IMAGE_SELECT && data != null
+                    && data.getData() != null) {
+                //Preview and process image selected
+                try {
+                    pictureUri = data.getData();
+                    final Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
+                    File selectedPictureFile = getOutputMediaFile();
+                    FileOutputStream fos = new FileOutputStream(selectedPictureFile);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 50, fos);
+                    fos.close();
+                    pictureUri = Uri.fromFile(selectedPictureFile);
+
+                    previewPicture();
+                    processPicture();
+                } catch ( Exception e ) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    /*
-     * Display image from a path to ImageView
-     */
-    private void previewCapturedImage() {
-        try {
-            takenPictureImageView.setVisibility(View.VISIBLE);
-            // bimatp factory
-            BitmapFactory.Options options = new BitmapFactory.Options();
+    private void previewPicture() throws NullPointerException {
+        pictureImageView.setVisibility(View.VISIBLE);
+        // bimatp factory
+        BitmapFactory.Options options = new BitmapFactory.Options();
 
-            // downsizing image as it throws OutOfMemory Exception for larger
-            // images
-            options.inSampleSize = 4;
-            final Bitmap bitmap = BitmapFactory.decodeFile(takenPictureUri.getPath(), options);
-            Log.d("img1", takenPictureUri.getPath());
-            takenPictureImageView.setImageBitmap(bitmap);
-
-            processImage();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+        // downsizing image as it throws OutOfMemory Exception for larger
+        // images
+        options.inSampleSize = 4;
+        final Bitmap bitmap = BitmapFactory.decodeFile(pictureUri.getPath(), options);
+        pictureImageView.setImageBitmap(bitmap);
     }
 
-    private void processImage() {
+    private void processPicture() {
         GetNutritionalInfo infoService = new GetNutritionalInfo(this);
-        String filePath = takenPictureUri.getPath();
+        String filePath = pictureUri.getPath();
 
         Log.d("img1", filePath);
 
@@ -132,27 +149,26 @@ public class MealStatsActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(Constants.TAKEN_PICTURE_URI, takenPictureUri);
+        outState.putParcelable(Constants.PICTURE_URI, pictureUri);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        takenPictureUri = savedInstanceState.getParcelable(Constants.TAKEN_PICTURE_URI);
+        pictureUri = savedInstanceState.getParcelable(Constants.PICTURE_URI);
     }
 
     /**
-     * Creating file uri to store image
+     * Creates file uri to store image
      */
     public Uri getOutputMediaFileUri() {
         return Uri.fromFile(getOutputMediaFile());
     }
 
     /*
-     * returning image
+     * Returns saved image
      */
     private File getOutputMediaFile() {
-        // External sdcard location
         File mediaStorageDir = new File(
                 getExternalCacheDir(),
                 Constants.IMAGE_DIRECTORY_NAME);
@@ -176,7 +192,6 @@ public class MealStatsActivity extends AppCompatActivity
         return mediaFile;
     }
 
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -189,7 +204,6 @@ public class MealStatsActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.meal_stats, menu);
         return true;
     }
@@ -216,9 +230,9 @@ public class MealStatsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            dispatchTakePictureIntent();
+            takePicture();
         } else if (id == R.id.nav_gallery) {
-
+            selectImage();
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_share) {
