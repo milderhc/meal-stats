@@ -89,8 +89,8 @@ public class MealStatsActivity extends AppCompatActivity
                 //Preview and process image taken
                 try {
                     Bitmap bitmap = BitmapFactory.decodeFile(pictureUri.getPath());
-                    compressPicture(bitmap, Constants.COMPRESS_QUALITY);
 
+                    compressPicture(bitmap, Constants.COMPRESS_QUALITY);
                     previewPicture();
                     processPicture();
                 } catch ( Exception e ) {
@@ -102,8 +102,8 @@ public class MealStatsActivity extends AppCompatActivity
                 try {
                     pictureUri = data.getData();
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
-                    compressPicture(bitmap, Constants.COMPRESS_QUALITY);
 
+                    compressPicture(bitmap, Constants.COMPRESS_QUALITY);
                     previewPicture();
                     processPicture();
                 } catch ( Exception e ) {
@@ -138,33 +138,31 @@ public class MealStatsActivity extends AppCompatActivity
      * Returns saved image
      */
     private File getOutputMediaFile() {
-        File mediaStorageDir = new File(
-                getExternalCacheDir(),
-                Constants.PICTURE_DIRECTORY_NAME);
+        File mediaStorageDir = new File(getExternalCacheDir(), Constants.PICTURE_DIRECTORY_NAME);
 
-        if (!mediaStorageDir.exists()) {
+        if (!mediaStorageDir.exists())
             if (!mediaStorageDir.mkdirs()) {
-                Log.d("img1", "Failed create "
+                Log.d("img_debug", "Failed creating "
                         + Constants.PICTURE_DIRECTORY_NAME + " directory");
                 return null;
             }
-        }
 
-        return new File(mediaStorageDir.getPath() + Constants.PICTURE_DIRECTORY_NAME + File.separator +
-                Constants.PICTURE_SELECTED_NAME);
+        return new File(mediaStorageDir.getPath() + File.separator +
+                        Constants.PICTURE_SELECTED_NAME);
     }
 
     private void processPicture() {
         GetNutritionalInfo infoService = new GetNutritionalInfo(this);
         String filePath = pictureUri.getPath();
 
-        Log.d("img1", filePath);
+        Log.d("img_debug", "Path " + filePath);
 
         try {
             infoService.sendRequest(filePath,
                     (response -> Log.d("deb_r", response.toString())),
                     (error -> Log.d("deb_e", error.toString())));
         } catch (FileNotFoundException e) {
+            Log.d("img_debug", "File not found " + filePath);
             e.printStackTrace();
         }
     }

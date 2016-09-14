@@ -10,7 +10,7 @@ public class Constants {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_IMAGE_SELECT = 2;
     public static final String PICTURE_DIRECTORY_NAME = "img";
-    public static final String PICTURE_SELECTED_NAME = "img_to_analize.jpg";
+    public static final String PICTURE_SELECTED_NAME = "img_to_analyze.jpg";
 
     //0-100
     public static final int COMPRESS_QUALITY = 0;
