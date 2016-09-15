@@ -7,8 +7,8 @@
         android:name="com.mealstats.mealstats.controller.FoodRetrievalFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="@dimen/food_fragment_left_margin"
+        android:layout_marginRight="@dimen/food_fragment_right_margin"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.mealstats.mealstats.controller.FoodRetrievalFragment"
         tools:listitem="@layout/fragment_foodretrieval"/>

@@ -64,7 +64,7 @@ public class MealStatsActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        pictureImageView = (ImageView) findViewById(R.id.picture_image_view);
+        //pictureImageView = (ImageView) findViewById(R.id.picture_image_view);
 
         loadFoodRetrievalFragment = false;
     }
