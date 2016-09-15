@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -21,6 +23,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.mealstats.mealstats.R;
+import com.mealstats.mealstats.controller.dummy.DummyContent;
 import com.mealstats.mealstats.services.GetNutritionalInfo;
 import com.mealstats.mealstats.util.Constants;
 
@@ -30,10 +33,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class MealStatsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+                   FoodRetrievalFragment.OnListFragmentInteractionListener {
 
     private Uri pictureUri;
     private ImageView pictureImageView;
+    private boolean loadFoodRetrievalFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,8 @@ public class MealStatsActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         pictureImageView = (ImageView) findViewById(R.id.picture_image_view);
+
+        loadFoodRetrievalFragment = false;
     }
 
     private boolean deviceSupportCamera() {
@@ -88,12 +95,8 @@ public class MealStatsActivity extends AppCompatActivity
             if (requestCode == Constants.REQUEST_IMAGE_CAPTURE) {
                 //Preview and process image taken
                 try {
-                    Bitmap bitmap = BitmapFactory.decodeFile(pictureUri.getPath());
-
-                    compressPicture(bitmap, Constants.COMPRESS_QUALITY);
-                    previewPicture();
-                    processPicture();
-                } catch ( Exception e ) {
+                    processPicture(BitmapFactory.decodeFile(pictureUri.getPath()));
+                } catch ( IOException e ) {
                     e.printStackTrace();
                 }
             } if (requestCode == Constants.REQUEST_IMAGE_SELECT && data != null
@@ -101,16 +104,28 @@ public class MealStatsActivity extends AppCompatActivity
                 //Preview and process image selected
                 try {
                     pictureUri = data.getData();
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
-
-                    compressPicture(bitmap, Constants.COMPRESS_QUALITY);
-                    previewPicture();
-                    processPicture();
-                } catch ( Exception e ) {
+                    processPicture(MediaStore.Images.Media.getBitmap(getContentResolver(),
+                            pictureUri));
+                } catch ( IOException e ) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    private void processPicture ( Bitmap bitmap ) throws IOException {
+        compressPicture(bitmap, Constants.COMPRESS_QUALITY);
+        //previewPicture();
+        analyzePicture();
+        loadFoodRetrievalFragment = true;
+    }
+
+    private void loadFragment ( Fragment newFragment, Bundle args ) {
+        newFragment.setArguments(args);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_content, newFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void previewPicture() throws NullPointerException {
@@ -151,7 +166,7 @@ public class MealStatsActivity extends AppCompatActivity
                         Constants.PICTURE_SELECTED_NAME);
     }
 
-    private void processPicture() {
+    private void analyzePicture() {
         GetNutritionalInfo infoService = new GetNutritionalInfo(this);
         String filePath = pictureUri.getPath();
 
@@ -165,6 +180,13 @@ public class MealStatsActivity extends AppCompatActivity
             Log.d("img_debug", "File not found " + filePath);
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onResume () {
+        super.onResume();
+        if ( loadFoodRetrievalFragment )
+            loadFragment(new FoodRetrievalFragment(), new Bundle());
     }
 
     @Override
@@ -208,6 +230,11 @@ public class MealStatsActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

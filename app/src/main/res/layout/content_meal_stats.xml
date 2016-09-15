@@ -12,6 +12,11 @@
     tools:context=".controller.MealStatsActivity"
     tools:showIn="@layout/app_bar_meal_stats">
 
+    <RelativeLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true" />
 
     <ImageView
         android:layout_width="wrap_content"
