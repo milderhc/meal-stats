@@ -16,6 +16,7 @@
     <string name="share">Share app</string>
     <string name="rate">Rate</string>
     <string name="about">About</string>
+    <string name="error_receving_response">An internal error ocurred when receving the server answer</string>
 
 
 </resources>

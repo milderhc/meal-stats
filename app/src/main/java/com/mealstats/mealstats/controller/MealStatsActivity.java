@@ -174,8 +174,8 @@ public class MealStatsActivity extends AppCompatActivity
 
         try {
             infoService.sendRequest(filePath,
-                    (response -> Log.d("deb_r", response.toString())),
-                    (error -> Log.d("deb_e", error.toString())));
+                    (response -> Log.d("deb_r", response.toString())), //Remeber to handle errors appropiatley as are
+                    (error -> Log.d("deb_e", error.toString())));      //defined in the backend.
         } catch (FileNotFoundException e) {
             Log.d("img_debug", "File not found " + filePath);
             e.printStackTrace();

@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.mealstats.mealstats.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,9 +32,11 @@ import java.util.Map;
 public class GetNutritionalInfo {
     private static String URL = "http://192.168.43.28:8080";
     private RequestQueue queue;
+    private Context context;
 
     public GetNutritionalInfo(Context context){
         this.queue = Volley.newRequestQueue(context);
+        this.context = context;
     }
 
     private String encodeImage(String fileName) throws FileNotFoundException {
@@ -92,24 +95,28 @@ public class GetNutritionalInfo {
 
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    URL,
-                    params,
-                    new Response.Listener<JSONObject>(){
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Map<String, String> data = null;
-                            try {
-                                data = parseJSONResponse(response);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                            onResponseNutritionaIInfo.onResponse(data);
-
+                URL,
+                params,
+                new Response.Listener<JSONObject>(){
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Map<String, String> data = null;
+                        try {
+                            data = parseJSONResponse(response);
+                        } catch (JSONException e) {
+                            data = new HashMap<>();
+                            data.put("error", context.getResources().getString(R.string.error_receving_response));
+                            data.put("details", e.toString());
+                            data.put("originalResponse", response.toString());
+                            e.printStackTrace();
                         }
-                    },
-                    onErrorListener
-                );
+
+                        onResponseNutritionaIInfo.onResponse(data);
+
+                    }
+                },
+                onErrorListener
+        );
 
         queue.add(jsonObjectRequest);
     }
