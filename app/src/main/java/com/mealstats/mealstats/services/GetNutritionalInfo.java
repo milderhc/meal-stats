@@ -25,8 +25,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class GetNutritionalInfo {
@@ -100,14 +102,16 @@ public class GetNutritionalInfo {
                 new Response.Listener<JSONObject>(){
                     @Override
                     public void onResponse(JSONObject response) {
-                        Map<String, String> data = null;
+                        List<Map<String, String>> data = null;
                         try {
                             data = parseJSONResponse(response);
                         } catch (JSONException e) {
-                            data = new HashMap<>();
-                            data.put("error", context.getResources().getString(R.string.error_receving_response));
-                            data.put("details", e.toString());
-                            data.put("originalResponse", response.toString());
+                            data = new ArrayList<>();
+                            HashMap<String, String> auxMap = new HashMap<>();
+                            auxMap.put("error", context.getResources().getString(R.string.error_receving_response));
+                            auxMap.put("details", e.toString());
+                            auxMap.put("originalResponse", response.toString());
+                            data.add(auxMap);
                             e.printStackTrace();
                         }
 
@@ -122,21 +126,27 @@ public class GetNutritionalInfo {
     }
 
 
-    private Map<String, String> parseJSONResponse(JSONObject response) throws JSONException {
-        Map<String, String> data = new HashMap<>();
+    private List<Map<String, String>> parseJSONResponse(JSONObject response) throws JSONException {
+        List<Map<String, String>> data = new ArrayList<>();
         try {
             JSONArray responseArray = response.getJSONArray("result");
             for(int i=0; i<responseArray.length(); i++){
                 JSONObject obj = responseArray.getJSONObject(i);
+                Map<String, String> auxMap = new HashMap<>();
                 for(String key : iteratorToIterable(obj.keys())){
-                    data.put(key, obj.getString(key));
+                    auxMap.put(key, obj.getString(key));
                 }
+
+                data.add(auxMap);
             }
         } catch (JSONException e) {
             JSONObject obj = response.getJSONObject("result");
+            Map<String, String> auxMap = new HashMap<>();
             for(String key : iteratorToIterable(response.keys())){
-                data.put(key, response.getString(key));
+                auxMap.put(key, response.getString(key));
             }
+
+            data.add(auxMap);
         }
 
         return data;
