@@ -1,4 +1,4 @@
-package com.mealstats.mealstats.controller;
+package com.mealstats.mealstats.controller.foodList;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mealstats.mealstats.R;
-import com.mealstats.mealstats.controller.FoodRetrievalFragment.OnListFragmentInteractionListener;
+import com.mealstats.mealstats.controller.foodList.FoodRetrievalFragment.OnListFragmentInteractionListener;
 import com.mealstats.mealstats.controller.dummy.DummyMealInfo;
 import com.mealstats.mealstats.services.BackendMessagesParser;
 

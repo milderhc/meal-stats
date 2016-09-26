@@ -10,5 +10,5 @@
         android:layout_marginLeft="@dimen/food_fragment_left_margin"
         android:layout_marginRight="@dimen/food_fragment_right_margin"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.mealstats.mealstats.controller.FoodRetrievalFragment"
+        tools:context=".controller.foodList.FoodRetrievalFragment"
         tools:listitem="@layout/fragment_foodretrieval"/>

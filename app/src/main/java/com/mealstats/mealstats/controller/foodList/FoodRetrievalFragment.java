@@ -1,4 +1,4 @@
-package com.mealstats.mealstats.controller;
+package com.mealstats.mealstats.controller.foodList;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -35,8 +35,6 @@ public class FoodRetrievalFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-
-    private ImageView imageView;
 
     private OnListFragmentInteractionListener mListener;
 
@@ -75,7 +73,7 @@ public class FoodRetrievalFragment extends Fragment {
             mealsNames = new ArrayList<>();
             for(int i=0; i<allNutritionalInfo.size(); i++){
                 Map<String, String> mealStat = allNutritionalInfo.get(i);
-                mealsNames.add(new DummyMealInfo(String.valueOf(i + 1), mealStat.get(Constants.NAME_MEAL_STAT_RESPONSE)));
+                mealsNames.add(new DummyMealInfo(mealStat));
             }
         }
     }

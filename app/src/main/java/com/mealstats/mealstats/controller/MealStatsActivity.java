@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.mealstats.mealstats.R;
 import com.mealstats.mealstats.controller.dummy.DummyMealInfo;
+import com.mealstats.mealstats.controller.foodList.FoodRetrievalFragment;
 import com.mealstats.mealstats.services.GetNutritionalInfo;
 import com.mealstats.mealstats.util.Constants;
 
