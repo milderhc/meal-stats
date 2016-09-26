@@ -17,6 +17,17 @@
     <string name="rate">Rate</string>
     <string name="about">About</string>
     <string name="error_receving_response">An internal error ocurred when receving the server answer</string>
+    <string name="hamburger">Hamburguer</string>
+    <string name="hotdog">Hot dog</string>
+    <string name="donuts">Donuts</string>
+    <string name="fries">French fries</string>
+    <string name="rice">Rice</string>
+    <string name="spaghetti">Spaghetti</string>
+    <string name="nachos">Nachos</string>
+    <string name="sandwich">Sandwich</string>
+    <string name="icecream">Ice cream</string>
+    <string name="pizza">Pizza</string>
+    <string name="unknownfood">Unknown food</string>
 
 
 </resources>

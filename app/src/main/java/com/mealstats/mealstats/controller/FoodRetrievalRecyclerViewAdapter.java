@@ -5,11 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mealstats.mealstats.R;
 import com.mealstats.mealstats.controller.FoodRetrievalFragment.OnListFragmentInteractionListener;
 import com.mealstats.mealstats.controller.dummy.DummyMealInfo;
+import com.mealstats.mealstats.services.BackendMessagesParser;
 
 import java.util.List;
 
@@ -40,9 +42,10 @@ public class FoodRetrievalRecyclerViewAdapter extends RecyclerView.Adapter<FoodR
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        String mealName = mValues.get(position).mealName;
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).mealName);
+        holder.mContentView.setText(holder.context.getResources().getString(BackendMessagesParser.getFoodName(mealName)));
+        holder.mImageView.setImageResource(BackendMessagesParser.getFoodIcon(mealName));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,16 +66,17 @@ public class FoodRetrievalRecyclerViewAdapter extends RecyclerView.Adapter<FoodR
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
         public final TextView mContentView;
+        public final ImageView mImageView;
         public DummyMealInfo mItem;
+        public final Context context;
 
         public ViewHolder(View view, Context context) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
-
+            mImageView = (ImageView) view.findViewById(R.id.imageViewFood);
+            this.context = context;
         }
 
         @Override
