@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.RecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list"
+    android:name="com.mealstats.mealstats.controller.statsList.StatsFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/food_fragment_left_margin"
+    android:layout_marginRight="@dimen/food_fragment_right_margin"
+    app:layoutManager="LinearLayoutManager"
+    tools:context=".controller.statsList.StatsFragment"
+    tools:listitem="@layout/fragment_stats"/>

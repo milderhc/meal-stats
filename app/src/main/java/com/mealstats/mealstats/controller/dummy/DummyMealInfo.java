@@ -2,9 +2,10 @@ package com.mealstats.mealstats.controller.dummy;
 
 import com.mealstats.mealstats.util.Constants;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class DummyMealInfo {
+public class DummyMealInfo implements Serializable {
     public final String mealName;
     public final Map<String, String> stats;
 

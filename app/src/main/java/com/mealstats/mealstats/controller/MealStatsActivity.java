@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.mealstats.mealstats.R;
 import com.mealstats.mealstats.controller.dummy.DummyMealInfo;
 import com.mealstats.mealstats.controller.foodList.FoodRetrievalFragment;
+import com.mealstats.mealstats.controller.statsList.StatsFragment;
 import com.mealstats.mealstats.services.GetNutritionalInfo;
 import com.mealstats.mealstats.util.Constants;
 
@@ -248,6 +249,7 @@ public class MealStatsActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(DummyMealInfo item) {
         Toast.makeText(this, item.mealName, Toast.LENGTH_LONG).show();
+        loadFragment(StatsFragment.newInstance(item.stats));
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

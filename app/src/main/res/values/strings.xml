@@ -28,6 +28,8 @@
     <string name="icecream">Ice cream</string>
     <string name="pizza">Pizza</string>
     <string name="unknownfood">Unknown food</string>
+    <string name="mealname">Meal name</string>
+    <string name="fakestats">Fake Stats</string>
 
 
 </resources>

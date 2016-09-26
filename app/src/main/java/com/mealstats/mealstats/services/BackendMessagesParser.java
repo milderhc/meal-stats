@@ -7,7 +7,7 @@ import java.util.Map;
 
 //TODO: Add error messages
 public class BackendMessagesParser {
-    private static Map<String, Integer> foodIconsId, foodStringsId;
+    private static Map<String, Integer> foodIconsId, foodStringsId, statsNamesId;
     static {
         foodIconsId = new HashMap<>();
         foodIconsId.put("pizza", R.drawable.pizza);
@@ -36,9 +36,12 @@ public class BackendMessagesParser {
         foodStringsId.put("ice cream", R.string.icecream);
         foodStringsId.put("default", R.string.unknownfood);
 
-
+        statsNamesId = new HashMap<>();
+        statsNamesId.put("name", R.string.mealname);
+        statsNamesId.put("stats", R.string.fakestats);
     }
 
+    //Returns the id of the food icon to show in the fragment
     public static int getFoodIcon(String name){
         if(foodIconsId.containsKey(name))
             return foodIconsId.get(name);
@@ -46,6 +49,7 @@ public class BackendMessagesParser {
             return foodIconsId.get("default");
     }
 
+    //Returns the id of the Food Name to display in the app
     public static int getFoodName(String s){
         if(foodStringsId.containsKey(s))
             return foodStringsId.get(s);
@@ -53,5 +57,13 @@ public class BackendMessagesParser {
             return foodStringsId.get("default");
     }
 
+
+    //Returns the id of the Food Name of the stat, eg. Calories, etc.
+    public static Integer getStatNameId(String s){
+        if(statsNamesId.containsKey(s))
+            return statsNamesId.get(s);
+        else
+            return null;
+    }
 
 }
