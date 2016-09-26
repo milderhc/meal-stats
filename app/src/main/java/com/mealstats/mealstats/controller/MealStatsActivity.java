@@ -43,7 +43,6 @@ public class MealStatsActivity extends AppCompatActivity
 
     private Uri pictureUri;
     private ImageView pictureImageView;
-    private boolean loadFoodRetrievalFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +119,6 @@ public class MealStatsActivity extends AppCompatActivity
         compressPicture(bitmap, Constants.COMPRESS_QUALITY);
         //previewPicture();
         analyzePicture();
-        loadFoodRetrievalFragment = true;
     }
 
     private void loadFragment ( Fragment newFragment ) {
@@ -248,7 +246,6 @@ public class MealStatsActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(DummyMealInfo item) {
-        Toast.makeText(this, item.mealName, Toast.LENGTH_LONG).show();
         loadFragment(StatsFragment.newInstance(item.stats));
     }
 
