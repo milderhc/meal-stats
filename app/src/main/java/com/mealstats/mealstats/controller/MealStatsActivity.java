@@ -21,9 +21,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.mealstats.mealstats.R;
-import com.mealstats.mealstats.controller.dummy.DummyContent;
+import com.mealstats.mealstats.controller.dummy.DummyMealInfo;
 import com.mealstats.mealstats.services.GetNutritionalInfo;
 import com.mealstats.mealstats.util.Constants;
 
@@ -31,6 +33,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 public class MealStatsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -65,8 +68,6 @@ public class MealStatsActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //pictureImageView = (ImageView) findViewById(R.id.picture_image_view);
-
-        loadFoodRetrievalFragment = false;
     }
 
     private boolean deviceSupportCamera() {
@@ -120,8 +121,7 @@ public class MealStatsActivity extends AppCompatActivity
         loadFoodRetrievalFragment = true;
     }
 
-    private void loadFragment ( Fragment newFragment, Bundle args ) {
-        newFragment.setArguments(args);
+    private void loadFragment ( Fragment newFragment ) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_content, newFragment);
         transaction.addToBackStack(null);
@@ -174,19 +174,31 @@ public class MealStatsActivity extends AppCompatActivity
 
         try {
             infoService.sendRequest(filePath,
-                    (response -> Log.d("deb_r", response.toString())), //Remeber to handle errors appropiatley as are
-                    (error -> Log.d("deb_e", error.toString())));      //defined in the backend.
+                    (response -> loadFragment(FoodRetrievalFragment.newInstance(response))), //Remeber to handle errors appropiatley as are
+                    (errorResponse -> handleBackendError(errorResponse)), //defined in the backend.
+                    (error -> handleVolleyError(error)));      //Any possible volley error
         } catch (FileNotFoundException e) {
-            Log.d("img_debug", "File not found " + filePath);
-            e.printStackTrace();
+            handleImageNotFoundError(e, filePath);
+            //e.printrivStackTrace();
         }
+    }
+
+    private void handleBackendError(Map<String, String> errorResponse){
+        Log.d("backend_error", errorResponse.get("error"));
+        Log.d("backend_error", errorResponse.get("details"));
+    }
+
+    private void handleImageNotFoundError(FileNotFoundException e, String filePath){
+        Log.d("img_debug", "File not found " + filePath);
+    }
+
+    private void handleVolleyError(VolleyError error){
+        Log.d("deb_e", error.toString());
     }
 
     @Override
     public void onResume () {
         super.onResume();
-        if ( loadFoodRetrievalFragment )
-            loadFragment(new FoodRetrievalFragment(), new Bundle());
     }
 
     @Override
@@ -233,8 +245,8 @@ public class MealStatsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-
+    public void onListFragmentInteraction(DummyMealInfo item) {
+        Toast.makeText(this, item.mealName, Toast.LENGTH_LONG).show();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

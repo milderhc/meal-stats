@@ -1,9 +1,6 @@
 package com.mealstats.mealstats.controller;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,10 +13,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.mealstats.mealstats.R;
-import com.mealstats.mealstats.controller.dummy.DummyContent;
-import com.mealstats.mealstats.controller.dummy.DummyContent.DummyItem;
+import com.mealstats.mealstats.controller.dummy.DummyMealInfo;
+import com.mealstats.mealstats.util.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A fragment representing a list of Items.
@@ -31,6 +30,8 @@ public class FoodRetrievalFragment extends Fragment {
 
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    private List<DummyMealInfo> mealsNames = new ArrayList<>();
+    private ArrayList<Map<String, String>> allNutritionalInfo = new ArrayList<>();
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -39,12 +40,20 @@ public class FoodRetrievalFragment extends Fragment {
 
     private OnListFragmentInteractionListener mListener;
 
+    public static FoodRetrievalFragment newInstance(List<Map<String, String>> nutritionalInfo) {
+        return newInstance(1, nutritionalInfo);
+    }
+
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static FoodRetrievalFragment newInstance(int columnCount) {
+    public static FoodRetrievalFragment newInstance(int columnCount,
+                                                    List<Map<String, String>> nutritionalInfo) {
+
         FoodRetrievalFragment fragment = new FoodRetrievalFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
+        ArrayList<Map<String, String>> nutritionalInfoSerializable = new ArrayList<>(nutritionalInfo); //In order to be serializable
+        args.putSerializable(Constants.NUTRITIONAL_INFO_ARGS, nutritionalInfoSerializable);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,6 +71,12 @@ public class FoodRetrievalFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            allNutritionalInfo = (ArrayList<Map<String, String>>) getArguments().getSerializable(Constants.NUTRITIONAL_INFO_ARGS);
+            mealsNames = new ArrayList<>();
+            for(int i=0; i<allNutritionalInfo.size(); i++){
+                Map<String, String> mealStat = allNutritionalInfo.get(i);
+                mealsNames.add(new DummyMealInfo(String.valueOf(i + 1), mealStat.get(Constants.NAME_MEAL_STAT_RESPONSE)));
+            }
         }
     }
 
@@ -79,7 +94,7 @@ public class FoodRetrievalFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new FoodRetrievalRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new FoodRetrievalRecyclerViewAdapter(mealsNames, mListener));
         }
 
         Log.d("fragment", "On create view");
@@ -125,6 +140,6 @@ public class FoodRetrievalFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(DummyMealInfo item);
     }
 }

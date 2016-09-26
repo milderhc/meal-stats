@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GetNutritionalInfo {
-    private static String URL = "http://192.168.43.28:8080";
+    private static String URL = " http://192.168.0.11:8080";
     private RequestQueue queue;
     private Context context;
 
@@ -69,6 +69,7 @@ public class GetNutritionalInfo {
 
     public void sendRequest(String fileName,
                             OnResponseNutritionaIInfo onResponseNutritionaIInfo,
+                            OnErrorNutritionalInfo onErrorNutritionalInfo,
                             Response.ErrorListener onErrorListener)
             throws FileNotFoundException, RuntimeException {
 
@@ -115,7 +116,10 @@ public class GetNutritionalInfo {
                             e.printStackTrace();
                         }
 
-                        onResponseNutritionaIInfo.onResponse(data);
+                        if(isErrorResponse(data))
+                            onErrorNutritionalInfo.onResponse(data.get(0));
+                        else
+                            onResponseNutritionaIInfo.onResponse(data);
 
                     }
                 },
@@ -125,6 +129,10 @@ public class GetNutritionalInfo {
         queue.add(jsonObjectRequest);
     }
 
+
+    private boolean isErrorResponse(List<Map<String, String>> response){
+        return response.get(0).containsKey("error");
+    }
 
     private List<Map<String, String>> parseJSONResponse(JSONObject response) throws JSONException {
         List<Map<String, String>> data = new ArrayList<>();
@@ -142,8 +150,8 @@ public class GetNutritionalInfo {
         } catch (JSONException e) {
             JSONObject obj = response.getJSONObject("result");
             Map<String, String> auxMap = new HashMap<>();
-            for(String key : iteratorToIterable(response.keys())){
-                auxMap.put(key, response.getString(key));
+            for(String key : iteratorToIterable(obj.keys())){
+                auxMap.put(key, obj.getString(key));
             }
 
             data.add(auxMap);

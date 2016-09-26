@@ -1,5 +1,6 @@
 package com.mealstats.mealstats.controller;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,21 +9,21 @@ import android.widget.TextView;
 
 import com.mealstats.mealstats.R;
 import com.mealstats.mealstats.controller.FoodRetrievalFragment.OnListFragmentInteractionListener;
-import com.mealstats.mealstats.controller.dummy.DummyContent.DummyItem;
+import com.mealstats.mealstats.controller.dummy.DummyMealInfo;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link DummyMealInfo} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class FoodRetrievalRecyclerViewAdapter extends RecyclerView.Adapter<FoodRetrievalRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<DummyMealInfo> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public FoodRetrievalRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public FoodRetrievalRecyclerViewAdapter(List<DummyMealInfo> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -31,14 +32,17 @@ public class FoodRetrievalRecyclerViewAdapter extends RecyclerView.Adapter<FoodR
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_foodretrieval, parent, false);
-        return new ViewHolder(view);
+
+
+
+        return new ViewHolder(view, parent.getContext());
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mContentView.setText(mValues.get(position).mealName);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,13 +65,14 @@ public class FoodRetrievalRecyclerViewAdapter extends RecyclerView.Adapter<FoodR
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public DummyMealInfo mItem;
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view, Context context) {
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
+
         }
 
         @Override
