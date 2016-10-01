@@ -16,5 +16,5 @@ public class Constants {
     public static final int COMPRESS_QUALITY = 0;
 
     public static final String NUTRITIONAL_INFO_ARGS = "NUTRITIONAL_INFO_ARGS";
-    public static final String NAME_MEAL_STAT_RESPONSE = "name";
+    public static final String NAME_MEAL_STAT_RESPONSE = "category";
 }

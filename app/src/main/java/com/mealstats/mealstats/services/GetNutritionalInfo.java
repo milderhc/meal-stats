@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GetNutritionalInfo {
-    private static String URL = " http://192.168.0.11:8080";
+    private static String URL = "http://192.168.0.11:8080";
     private RequestQueue queue;
     private Context context;
 

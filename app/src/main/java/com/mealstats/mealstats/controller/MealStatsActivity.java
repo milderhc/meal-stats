@@ -1,5 +1,7 @@
 package com.mealstats.mealstats.controller;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -21,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -47,6 +51,8 @@ public class MealStatsActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        setTitle(getResources().getString(R.string.title_activity_meal_stats));
+
         setContentView(R.layout.activity_meal_stats);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,8 +73,19 @@ public class MealStatsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        showInstructionsMessage();
         //pictureImageView = (ImageView) findViewById(R.id.picture_image_view);
+    }
+
+    private void showInstructionsMessage(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Instructions");
+        builder.setMessage(getResources().getString(R.string.take_picture_message));
+        builder.setPositiveButton("Got it",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {}
+                });
+        builder.show();
     }
 
     private boolean deviceSupportCamera() {

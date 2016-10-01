@@ -50,6 +50,7 @@ public class StatsRecylerViewAdapter  extends RecyclerView.Adapter<StatsRecylerV
 
         holder.mStatsNameView.setText(statName);
 
+
         holder.mStatsValueView.setText(statValue); //TODO Uase backend parser
     }
 

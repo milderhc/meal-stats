@@ -2,7 +2,7 @@
     <string name="app_title">Meal Stats</string>
 
     <string name="app_name">MealStats</string>
-    <string name="title_activity_meal_stats">MealStatsActivity</string>
+    <string name="title_activity_meal_stats">Meal Stats</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -30,6 +30,8 @@
     <string name="unknownfood">Unknown food</string>
     <string name="mealname">Meal name</string>
     <string name="fakestats">Fake Stats</string>
+    <string name="main_activity_title">Meal Stats</string>
+    <string name="take_picture_message">Take a picture or select an image from the gallery.</string>
 
 
 </resources>

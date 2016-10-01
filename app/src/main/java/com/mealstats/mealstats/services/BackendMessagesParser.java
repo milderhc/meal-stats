@@ -4,6 +4,7 @@ import com.mealstats.mealstats.R;
 
 import java.util.HashMap;
 import java.util.Map;
+import android.util.Log;
 
 //TODO: Add error messages
 public class BackendMessagesParser {
