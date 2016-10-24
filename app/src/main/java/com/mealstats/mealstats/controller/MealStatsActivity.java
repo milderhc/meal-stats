@@ -1,6 +1,7 @@
 package com.mealstats.mealstats.controller;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -47,6 +48,7 @@ public class MealStatsActivity extends AppCompatActivity
 
     private Uri pictureUri;
     private ImageView pictureImageView;
+    private ProgressDialog onRequestBackendDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +141,7 @@ public class MealStatsActivity extends AppCompatActivity
     }
 
     private void loadFragment ( Fragment newFragment ) {
+        onRequestBackendDialog.hide();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_content, newFragment);
         transaction.addToBackStack(null);
@@ -183,6 +186,12 @@ public class MealStatsActivity extends AppCompatActivity
                         Constants.PICTURE_SELECTED_NAME);
     }
 
+    private void initLoadingDialog(){
+        onRequestBackendDialog = new ProgressDialog(this);
+        onRequestBackendDialog.setTitle(getResources().getString(R.string.loadingBackendTitle));
+        onRequestBackendDialog.setMessage(getResources().getString(R.string.loadingBackendMessage));
+    }
+
     private void analyzePicture() {
         GetNutritionalInfo infoService = new GetNutritionalInfo(this);
         String filePath = pictureUri.getPath();
@@ -190,6 +199,8 @@ public class MealStatsActivity extends AppCompatActivity
         Log.d("img_debug", "Path " + filePath);
 
         try {
+            initLoadingDialog();
+            onRequestBackendDialog.show();
             infoService.sendRequest(filePath,
                     (response -> loadFragment(FoodRetrievalFragment.newInstance(response))), //Remeber to handle errors appropiatley as are
                     (errorResponse -> handleBackendError(errorResponse)), //defined in the backend.
@@ -203,14 +214,38 @@ public class MealStatsActivity extends AppCompatActivity
     private void handleBackendError(Map<String, String> errorResponse){
         Log.d("backend_error", errorResponse.get("error"));
         Log.d("backend_error", errorResponse.get("details"));
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Error");
+        builder.setMessage(errorResponse.get("error"));
+        builder.setPositiveButton("Got it",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {}
+                });
+        builder.show();
     }
 
     private void handleImageNotFoundError(FileNotFoundException e, String filePath){
         Log.d("img_debug", "File not found " + filePath);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Error");
+        builder.setMessage(getResources().getString(R.string.image_not_found_error));
+        builder.setPositiveButton("Got it",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {}
+                });
+        builder.show();
     }
 
     private void handleVolleyError(VolleyError error){
         Log.d("deb_e", error.toString());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Error");
+        builder.setMessage(getResources().getString(R.string.network_error));
+        builder.setPositiveButton("Got it",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {}
+                });
+        builder.show();
     }
 
     @Override

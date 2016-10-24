@@ -32,6 +32,10 @@
     <string name="fakestats">Fake Stats</string>
     <string name="main_activity_title">Meal Stats</string>
     <string name="take_picture_message">Take a picture or select an image from the gallery.</string>
+    <string name="loadingBackendTitle">Loading</string>
+    <string name="loadingBackendMessage">Your request is being processed...</string>
+    <string name="network_error">An network error has ocurred, please check your internet connection.</string>
+    <string name="image_not_found_error">There has been an error with the cameara. Please try again.</string>
 
 
 </resources>
