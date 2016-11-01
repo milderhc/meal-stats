@@ -214,6 +214,8 @@ public class MealStatsActivity extends AppCompatActivity
     private void handleBackendError(Map<String, String> errorResponse){
         Log.d("backend_error", errorResponse.get("error"));
         Log.d("backend_error", errorResponse.get("details"));
+        if(onRequestBackendDialog != null)
+            onRequestBackendDialog.hide();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Error");
         builder.setMessage(errorResponse.get("error"));
@@ -225,6 +227,8 @@ public class MealStatsActivity extends AppCompatActivity
     }
 
     private void handleImageNotFoundError(FileNotFoundException e, String filePath){
+        if(onRequestBackendDialog != null)
+            onRequestBackendDialog.hide();
         Log.d("img_debug", "File not found " + filePath);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Error");
@@ -237,6 +241,8 @@ public class MealStatsActivity extends AppCompatActivity
     }
 
     private void handleVolleyError(VolleyError error){
+        if(onRequestBackendDialog != null)
+            onRequestBackendDialog.hide();
         Log.d("deb_e", error.toString());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Error");
