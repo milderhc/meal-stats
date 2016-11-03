@@ -48,10 +48,11 @@ public class StatsRecylerViewAdapter  extends RecyclerView.Adapter<StatsRecylerV
                 holder.context.getResources().getString(BackendMessagesParser.getFoodName(mealInfo.statValue)) :
                 mealInfo.statValue );
 
+
+
         holder.mStatsNameView.setText(statName);
-
-
         holder.mStatsValueView.setText(statValue); //TODO Uase backend parser
+        holder.mImageView.setImageResource(BackendMessagesParser.getFoodIcon(statName));
     }
 
     @Override
@@ -63,12 +64,14 @@ public class StatsRecylerViewAdapter  extends RecyclerView.Adapter<StatsRecylerV
         public final View mView;
         public final TextView mStatsNameView, mStatsValueView;
         public final Context context;
+        public final ImageView mImageView;
 
         public ViewHolder(View view, Context context) {
             super(view);
             mView = view;
             mStatsNameView = (TextView) view.findViewById(R.id.stat_name);
             mStatsValueView = (TextView) view.findViewById(R.id.stat_value);
+            mImageView = (ImageView) view.findViewById(R.id.imageViewStats);
             this.context = context;
         }
 

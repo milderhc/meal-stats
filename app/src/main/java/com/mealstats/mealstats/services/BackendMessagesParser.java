@@ -23,6 +23,15 @@ public class BackendMessagesParser {
         foodIconsId.put("ice cream", R.drawable.icecream);
         foodIconsId.put("default", R.drawable.default_icon);
 
+        //images stats
+        foodIconsId.put("Energy", R.drawable.bombilla);
+        foodIconsId.put("Protein", R.drawable.filete);
+        foodIconsId.put("Sugars", R.drawable.golosinas);
+        foodIconsId.put("Carbohydrate", R.drawable.trigoygranos);
+        foodIconsId.put("Fat", R.drawable.grasa);
+        foodIconsId.put("category", R.drawable.estardepie);
+
+
 
         foodStringsId = new HashMap<>();
         foodStringsId.put("pizza", R.string.pizza);
