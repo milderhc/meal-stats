@@ -21,12 +21,15 @@
         android:layout_marginBottom="100dp"
         android:tag=""/>
 
-    <Button
-        android:layout_width="match_parent"
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/facebook_login_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to app"
-        android:id="@+id/button"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="goToMainActivity"/>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>

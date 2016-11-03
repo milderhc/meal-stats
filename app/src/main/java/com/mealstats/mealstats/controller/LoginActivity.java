@@ -6,14 +6,11 @@ import android.preference.PreferenceManager;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
@@ -21,7 +18,6 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -39,8 +35,6 @@ import com.mealstats.mealstats.R;
 import com.mealstats.mealstats.model.User;
 import com.mealstats.mealstats.util.Constants;
 
-import org.json.JSONObject;
-
 public class LoginActivity extends AppCompatActivity  implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -56,7 +50,7 @@ public class LoginActivity extends AppCompatActivity  implements
 
         if ( !isLogged() ) {
             facebookLoginSetUp();
-            googleLogin();
+            googleLoginSetUp();
         }
     }
 
@@ -102,9 +96,9 @@ public class LoginActivity extends AppCompatActivity  implements
                         loginResult.getAccessToken(),
                         (object, response) -> {
                             try {
-                                String email = object.getString(Constants.EMAIL);
+                                String userEmail = object.getString(Constants.EMAIL);
 
-                                logInUser(email);
+                                logInUser(userEmail);
                             }catch( Exception e){
                                 Log.d("fb", "An error has ocurred logging in facebook");
                             }
@@ -134,7 +128,11 @@ public class LoginActivity extends AppCompatActivity  implements
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
 
-
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
     }
 
     private void logInUser (String userEmail) {
@@ -155,6 +153,10 @@ public class LoginActivity extends AppCompatActivity  implements
         startActivity(new Intent(this, MealStatsActivity.class));
     }
 
+    /*
+    * Google Login
+    * */
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
@@ -170,16 +172,6 @@ public class LoginActivity extends AppCompatActivity  implements
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-        }
-    }
 
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
@@ -188,6 +180,7 @@ public class LoginActivity extends AppCompatActivity  implements
             GoogleSignInAccount acct = result.getSignInAccount();
             Log.d(TAG, acct.getEmail());
             String userMail = acct.getEmail();
+            logInUser(userMail);
             //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             updateUI(true);
         } else {
@@ -230,7 +223,7 @@ public class LoginActivity extends AppCompatActivity  implements
         }
     }
 
-    private void googleLogin () {
+    private void googleLoginSetUp() {
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
         ((SignInButton)findViewById(R.id.sign_in_button)).setSize(SignInButton.SIZE_STANDARD);

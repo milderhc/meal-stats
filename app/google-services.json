@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "947761556164",
+    "project_id": "firebase-mealstats"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947761556164:android:efaa9c0a4a7cd576",
+        "android_client_info": {
+          "package_name": "com.mealstats.mealstats"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "947761556164-qhf5mpbr7atacf9iokhhbbah7gf0clh5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mealstats.mealstats",
+            "certificate_hash": "4DE83C99A66615D20FED9FD03B34ECCCE6CE9A03"
+          }
+        },
+        {
+          "client_id": "947761556164-2o87et8ivllrhlvc7c0c9lgt370257id.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsrdwRFOAfCTrxx5KSv5eadPtbLGk3J5k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
