@@ -13,7 +13,7 @@
     <string name="take_picture">Take a picture</string>
     <string name="gallery">Gallery</string>
     <string name="settings">Settings</string>
-    <string name="share">Share app</string>
+    <string name="share">Share</string>
     <string name="rate">Rate</string>
     <string name="about">About</string>
     <string name="error_receving_response">An internal error ocurred when receving the server answer</string>
@@ -39,6 +39,8 @@
 
 
     <string name="facebook_app_id">305754963142302</string>
+    <string name="facebook_login_text">Sign in with Facebook</string>
+    <string name="logout">Log out</string>
 
 
 </resources>
