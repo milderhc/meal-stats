@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    protected User currentUser;
+    protected static User currentUser;
     private SharedPreferences sharedPreferences;
 
     private boolean isLogged () {
@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         if ( sharedPreferences.getBoolean(Constants.IS_LOGGED,
                                           Constants.IS_LOGGED_DEFAULT_VALUE) ) {
 
-            String userEmail = sharedPreferences.getString(Constants.USER_EMAIL, null);
+            String userEmail = sharedPreferences.getString(Constants.EMAIL, null);
 
             //TODO get the real user
             currentUser = new User(userEmail);
@@ -76,8 +76,9 @@ public class LoginActivity extends AppCompatActivity {
                         loginResult.getAccessToken(),
                         (object, response) -> {
                             try {
-                                String userEmail = object.getString(Constants.USER_EMAIL);
-                                logInUser(userEmail);
+                                String email = object.getString(Constants.EMAIL);
+
+                                logInUser(email);
                             }catch( Exception e){
                                 Log.d("fb", "An error has ocurred logging in facebook");
                             }
@@ -85,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Bundle parameters = new Bundle();
                 //parameters.putString("fields", "id,name,email");
-                parameters.putString("fields", "email");
+                parameters.putString("fields", Constants.FACEBOOK_EMAIL);
                 request.setParameters(parameters);
                 request.executeAsync();
             }
@@ -117,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(Constants.IS_LOGGED, true);
-        editor.putString(Constants.USER_EMAIL, userEmail);
+        editor.putString(Constants.EMAIL, userEmail);
         editor.commit();
 
         goToMainActivity();

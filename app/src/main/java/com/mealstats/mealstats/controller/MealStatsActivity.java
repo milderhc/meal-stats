@@ -73,10 +73,19 @@ public class MealStatsActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        setUpNavigationView();
         showInstructionsMessage();
         //pictureImageView = (ImageView) findViewById(R.id.picture_image_view);
+    }
+
+    private void setUpNavigationView () {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView headerEmailTextView = (TextView) headerView.findViewById(R.id.header_email);
+        headerEmailTextView.setText(LoginActivity.currentUser.getEmail());
     }
 
     private void showInstructionsMessage(){

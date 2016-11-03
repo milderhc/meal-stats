@@ -19,13 +19,13 @@ public class Constants {
 
     public static final String IS_LOGGED;
     public static final boolean IS_LOGGED_DEFAULT_VALUE;
-    public static String USER_EMAIL;
+    public static final String EMAIL;
+
+    public static final String FACEBOOK_FIRST_NAME;
+    public static final String FACEBOOK_LASTNAME;
+    public static final String FACEBOOK_EMAIL;
 
     static {
-        IS_LOGGED = "is_logged";
-        IS_LOGGED_DEFAULT_VALUE = false;
-        USER_EMAIL = "email";
-
         NUTRITIONAL_INFO_ARGS = "NUTRITIONAL_INFO_ARGS";
         NAME_MEAL_STAT_RESPONSE = "category";
 
@@ -38,5 +38,13 @@ public class Constants {
 
         //0-100
         COMPRESS_QUALITY = 0;
+
+        IS_LOGGED = "is_logged";
+        IS_LOGGED_DEFAULT_VALUE = false;
+        EMAIL = "email";
+
+        FACEBOOK_FIRST_NAME = "first_name";
+        FACEBOOK_LASTNAME = "last_name";
+        FACEBOOK_EMAIL = "email";
     }
 }
