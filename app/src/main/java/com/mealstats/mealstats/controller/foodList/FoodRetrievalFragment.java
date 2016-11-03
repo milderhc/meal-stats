@@ -73,6 +73,7 @@ public class FoodRetrievalFragment extends Fragment {
             mealsNames = new ArrayList<>();
             for(int i=0; i<allNutritionalInfo.size(); i++){
                 Map<String, String> mealStat = allNutritionalInfo.get(i);
+                Log.d("Nutrition",mealStat.toString());
                 mealsNames.add(new DummyMealInfo(mealStat));
             }
         }

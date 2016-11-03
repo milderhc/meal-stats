@@ -11,4 +11,7 @@
     <!-- Meal stats activity dimensions. -->
     <dimen name="food_fragment_left_margin">5dp</dimen>
     <dimen name="food_fragment_right_margin">5dp</dimen>
+
+    <dimen name="google_button_height">50dp</dimen>
+    <dimen name="google_button_width">300dp</dimen>
 </resources>
