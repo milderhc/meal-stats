@@ -1,21 +1,59 @@
 package com.mealstats.mealstats.controller;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.mealstats.mealstats.R;
+import com.mealstats.mealstats.model.User;
+import com.mealstats.mealstats.util.Constants;
+
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if ( !isLogged() ) {
+            facebookLoginSetUp();
+            //googleLoginSetUp();
+        }
+    }
+
+    protected User currentUser;
+    private SharedPreferences sharedPreferences;
+
+    private boolean isLogged () {
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if ( sharedPreferences.getBoolean(Constants.IS_LOGGED,
+                                          Constants.IS_LOGGED_DEFAULT_VALUE) ) {
+
+            String userEmail = sharedPreferences.getString(Constants.USER_EMAIL, null);
+
+            //TODO get the real user
+            currentUser = new User(userEmail);
+
+            goToMainActivity();
+            return true;
+        }
+
+        return false;
+    }
+
 
     /*
     * Facebook Login
@@ -23,10 +61,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private CallbackManager callbackManager;
 
-    public void facebookLogin () {
+    private void facebookLoginSetUp() {
         FacebookSdk.sdkInitialize(getApplicationContext());
-        setContentView(R.layout.activity_login);
         callbackManager = CallbackManager.Factory.create();
+        setContentView(R.layout.activity_login);
         LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
         loginButton.setReadPermissions("public_profile");
         loginButton.setReadPermissions("email");
@@ -34,7 +72,22 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        (object, response) -> {
+                            try {
+                                String userEmail = object.getString(Constants.USER_EMAIL);
+                                logInUser(userEmail);
+                            }catch( Exception e){
+                                Log.d("fb", "An error has ocurred logging in facebook");
+                            }
+                        });
 
+                Bundle parameters = new Bundle();
+                //parameters.putString("fields", "id,name,email");
+                parameters.putString("fields", "email");
+                request.setParameters(parameters);
+                request.executeAsync();
             }
 
             @Override
@@ -44,21 +97,34 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onError(FacebookException error) {
-
+                Log.d("fb", "An error has ocurred logging in facebook");
             }
         });
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
 
-        facebookLogin();
+
+    }
+
+    private void logInUser (String userEmail) {
+        //TODO check if user associated to userEmail is already registered
+
+        currentUser = new User(userEmail);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(Constants.IS_LOGGED, true);
+        editor.putString(Constants.USER_EMAIL, userEmail);
+        editor.commit();
+
+        goToMainActivity();
     }
 
 
-
-    public void goToMainActivity(View view) {
+    public void goToMainActivity() {
         startActivity(new Intent(this, MealStatsActivity.class));
     }
 }

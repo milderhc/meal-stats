@@ -5,16 +5,38 @@ package com.mealstats.mealstats.util;
  */
 public class Constants {
 
-    public static final String PICTURE_URI = "pictureUri";
+    public static final String PICTURE_URI;
 
-    public static final int REQUEST_IMAGE_CAPTURE = 1;
-    public static final int REQUEST_IMAGE_SELECT = 2;
-    public static final String PICTURE_DIRECTORY_NAME = "img";
-    public static final String PICTURE_SELECTED_NAME = "img_to_analyze.jpg";
+    public static final int REQUEST_IMAGE_CAPTURE;
+    public static final int REQUEST_IMAGE_SELECT;
+    public static final String PICTURE_DIRECTORY_NAME;
+    public static final String PICTURE_SELECTED_NAME;
 
-    //0-100
-    public static final int COMPRESS_QUALITY = 0;
+    public static final int COMPRESS_QUALITY;
 
-    public static final String NUTRITIONAL_INFO_ARGS = "NUTRITIONAL_INFO_ARGS";
-    public static final String NAME_MEAL_STAT_RESPONSE = "category";
+    public static final String NUTRITIONAL_INFO_ARGS;
+    public static final String NAME_MEAL_STAT_RESPONSE;
+
+    public static final String IS_LOGGED;
+    public static final boolean IS_LOGGED_DEFAULT_VALUE;
+    public static String USER_EMAIL;
+
+    static {
+        IS_LOGGED = "is_logged";
+        IS_LOGGED_DEFAULT_VALUE = false;
+        USER_EMAIL = "email";
+
+        NUTRITIONAL_INFO_ARGS = "NUTRITIONAL_INFO_ARGS";
+        NAME_MEAL_STAT_RESPONSE = "category";
+
+        PICTURE_URI = "pictureUri";
+        PICTURE_DIRECTORY_NAME = "img";
+        PICTURE_SELECTED_NAME = "img_to_analyze.jpg";
+
+        REQUEST_IMAGE_SELECT = 2;
+        REQUEST_IMAGE_CAPTURE = 1;
+
+        //0-100
+        COMPRESS_QUALITY = 0;
+    }
 }
