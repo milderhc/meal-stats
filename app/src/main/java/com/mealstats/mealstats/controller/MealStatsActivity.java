@@ -4,11 +4,13 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -334,6 +336,28 @@ public class MealStatsActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_about) {
 
+        } else if (id == R.id.nav_logout) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.logout_title);
+            builder.setMessage(R.string.logout_message);
+            builder.setPositiveButton(R.string.yes_message, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(MealStatsActivity.this);
+                    SharedPreferences.Editor ed = mPrefs.edit();
+                    ed.clear();
+                    ed.commit();
+                    try {
+                        Runtime runtime = Runtime.getRuntime();
+                        runtime.exec("pm clear com.mealstats.mealstats");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+            builder.setNegativeButton(R.string.no_message, null);
+            builder.show();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

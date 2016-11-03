@@ -41,6 +41,10 @@
     <string name="facebook_app_id">305754963142302</string>
     <string name="facebook_login_text">Sign in with Facebook</string>
     <string name="logout">Log out</string>
+    <string name="logout_title">Log out</string>
+    <string name="logout_message">Are you sure you want to quit?</string>
+    <string name="yes_message">Yes</string>
+    <string name="no_message">No</string>
 
 
 </resources>
