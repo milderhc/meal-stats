@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:baselineAligned="false"
+    android:weightSum="1">
 
 
     <ImageView
@@ -15,8 +17,8 @@
 
     <TextView
         android:id="@+id/stat_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="176dp"
+        android:layout_height="29dp"
         android:layout_margin="@dimen/text_margin"
         android:text="state name"
         android:textAppearance="?attr/textAppearanceListItem" />
@@ -24,8 +26,8 @@
 
     <TextView
         android:id="@+id/stat_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="32dp"
         android:layout_margin="@dimen/text_margin"
         android:text="state value"
         android:textAppearance="?attr/textAppearanceListItem" />
