@@ -7,19 +7,21 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/login_background"
     tools:context="com.mealstats.mealstats.controller.LoginActivity">
 
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
         android:textSize="14dp"
-        android:layout_width="@dimen/google_button_width"
-        android:layout_height="@dimen/google_button_height"
-
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp"
-        android:tag=""/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/facebook_login_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/google_login_margin_bottom"/>
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/facebook_login_button"
