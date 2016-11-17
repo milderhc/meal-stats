@@ -20,6 +20,16 @@ public class Constants {
     public static final String IS_LOGGED;
     public static final boolean IS_LOGGED_DEFAULT_VALUE;
     public static final String EMAIL;
+    public static final String HEIGHT;
+    public static final String WEIGHT;
+    public static final String AGE;
+    public static final String ACTIVITY;
+    public static final String GENDER;
+    public static final String MALE;
+    public static final String FEMALE;
+    public static final String LIGHT;
+    public static final String MODERATE;
+    public static final String ACTIVE;
 
     public static final String FACEBOOK_FIRST_NAME;
     public static final String FACEBOOK_LASTNAME;
@@ -42,6 +52,18 @@ public class Constants {
         IS_LOGGED = "is_logged";
         IS_LOGGED_DEFAULT_VALUE = false;
         EMAIL = "email";
+        ACTIVITY = "activity";
+        AGE = "age";
+        HEIGHT = "height";
+        WEIGHT = "weight";
+        GENDER = "gender";
+
+
+        MALE = "male";
+        FEMALE = "female";
+        LIGHT = "light";
+        MODERATE = "moderate";
+        ACTIVE = "active";
 
         FACEBOOK_FIRST_NAME = "first_name";
         FACEBOOK_LASTNAME = "last_name";

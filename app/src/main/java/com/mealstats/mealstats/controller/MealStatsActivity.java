@@ -344,6 +344,9 @@ public class MealStatsActivity extends AppCompatActivity
         loadFragment(GeneralStatsFragment.newInstance(item.stats));
     }
 
+
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -355,7 +358,10 @@ public class MealStatsActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             selectPicture();
         } else if (id == R.id.nav_settings) {
-
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.main_content, ConfigFragment.newInstance());
+            transaction.addToBackStack(null);
+            transaction.commit();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_rate) {

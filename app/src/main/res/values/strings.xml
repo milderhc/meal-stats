@@ -59,5 +59,17 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="light">Light</string>
+    <string name="moderate">Moderate</string>
+    <string name="Active">Active</string>
+    <string name="save">Save</string>
+
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="eating_this">I\'m eating this</string>
 </resources>
