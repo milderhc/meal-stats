@@ -1,5 +1,6 @@
 package com.mealstats.mealstats.controller;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -43,14 +44,19 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MealStatsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
                    FoodRetrievalFragment.OnListFragmentInteractionListener {
 
+    private static final int TIP_FREQUENCY = 4;
     private Uri pictureUri;
     private ImageView pictureImageView;
     private ProgressDialog onRequestBackendDialog;
+    private int requestsCounter;
+
+    private String[] TIPS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +84,9 @@ public class MealStatsActivity extends AppCompatActivity
         setUpNavigationView();
         showInstructionsMessage();
         //pictureImageView = (ImageView) findViewById(R.id.picture_image_view);
+        requestsCounter = 0;
+
+        TIPS  = getResources().getStringArray(R.array.tips);
     }
 
     private void setUpNavigationView () {
@@ -157,6 +166,23 @@ public class MealStatsActivity extends AppCompatActivity
         transaction.replace(R.id.main_content, newFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+
+        if(requestsCounter % TIP_FREQUENCY == 0){
+            showTip();
+        }
+        requestsCounter++;
+    }
+
+    @SuppressLint("NewApi")
+    private void showTip(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Tip");
+        builder.setMessage(TIPS[ThreadLocalRandom.current().nextInt(TIPS.length)]);
+        builder.setPositiveButton("Got it",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {}
+                });
+        builder.show();
     }
 
     private void previewPicture() throws NullPointerException {

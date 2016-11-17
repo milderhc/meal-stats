@@ -46,5 +46,14 @@
     <string name="yes_message">Yes</string>
     <string name="no_message">No</string>
 
-
+    <string-array name="tips">
+        <item>Eat a Variety of Foods</item>
+        <item>Base your diet on plenty of foods rich in carbohydrates</item>
+        <item>Enjoy plenty of fruits and vegetables</item>
+        <item>Maintain a healthy body weight and feel good</item>
+        <item>Eat moderate portions - reduce, don\'t eliminate foods</item>
+        <item>Drink plenty of fluids</item>
+        <item>Get active and be a healthy weight</item>
+        <item>Cut down on saturated fat and sugar</item>
+    </string-array>
 </resources>

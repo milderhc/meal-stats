@@ -49,7 +49,7 @@ public class StatsRecylerViewAdapter  extends RecyclerView.Adapter<StatsRecylerV
                 mealInfo.statValue );
 
 
-
+        statName = (statName.charAt(0)+"").toUpperCase() + statName.substring(1);
         holder.mStatsNameView.setText(statName);
         holder.mStatsValueView.setText(statValue); //TODO Uase backend parser
         holder.mImageView.setImageResource(BackendMessagesParser.getFoodIcon(statName));
