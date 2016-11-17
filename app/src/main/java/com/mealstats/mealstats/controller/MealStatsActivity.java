@@ -2,6 +2,7 @@ package com.mealstats.mealstats.controller;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -37,6 +39,8 @@ import com.google.gson.reflect.TypeToken;
 import com.mealstats.mealstats.R;
 import com.mealstats.mealstats.controller.dummy.DummyMealInfo;
 import com.mealstats.mealstats.controller.foodList.FoodRetrievalFragment;
+import com.mealstats.mealstats.controller.historicGrid.MealFragment;
+import com.mealstats.mealstats.controller.historicGrid.dummy.DummyContent;
 import com.mealstats.mealstats.controller.statsList.StatsFragment;
 import com.mealstats.mealstats.model.FoodRequest;
 import com.mealstats.mealstats.services.GetNutritionalInfo;
@@ -47,6 +51,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,7 +61,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class MealStatsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-                   FoodRetrievalFragment.OnListFragmentInteractionListener {
+                   FoodRetrievalFragment.OnListFragmentInteractionListener,
+MealFragment.OnListFragmentInteractionListener{
 
     private static final int TIP_FREQUENCY = 4;
     private Uri pictureUri;
@@ -89,11 +96,13 @@ public class MealStatsActivity extends AppCompatActivity
         toggle.syncState();
 
         setUpNavigationView();
-        showInstructionsMessage();
+
         //pictureImageView = (ImageView) findViewById(R.id.picture_image_view);
         requestsCounter = 0;
 
         TIPS  = getResources().getStringArray(R.array.tips);
+        loadFragment(MealFragment.newInstance(2, foodRequestToDummyItem(getHistoricRequest())));
+        //showInstructionsMessage();
     }
 
     private void setUpNavigationView () {
@@ -167,17 +176,18 @@ public class MealStatsActivity extends AppCompatActivity
         analyzePicture();
     }
 
+
+
     private void loadFragment ( Fragment newFragment ) {
-        onRequestBackendDialog.hide();
+        if(onRequestBackendDialog != null)
+            onRequestBackendDialog.hide();
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_content, newFragment);
         transaction.addToBackStack(null);
         transaction.commit();
 
-        if(requestsCounter % TIP_FREQUENCY == 0){
-            showTip();
-        }
-        requestsCounter++;
+
     }
 
     @SuppressLint("NewApi")
@@ -253,6 +263,11 @@ public class MealStatsActivity extends AppCompatActivity
             handleImageNotFoundError(e, filePath);
             //e.printrivStackTrace();
         }
+
+        if(requestsCounter % TIP_FREQUENCY == 0){
+            showTip();
+        }
+        requestsCounter++;
     }
 
     public void acceptResponse(List<Map<String, String>> nutritionalInfo){
@@ -263,6 +278,24 @@ public class MealStatsActivity extends AppCompatActivity
         for(FoodRequest req : getHistoricRequest()){
             Log.d("Xd", req.toString());
         }
+    }
+
+    private List<DummyContent.DummyItem> foodRequestToDummyItem(List<FoodRequest> foodRequests){
+        ArrayList<DummyContent.DummyItem> ret = new ArrayList<>();
+
+
+        for(FoodRequest foodRequest : foodRequests){
+            DateFormat df = null;
+            if(DateUtils.isToday(foodRequest.getDate().getTime()))
+                df = new SimpleDateFormat("HH:mm:ss");
+            else
+                df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+
+            String reportDate = df.format(foodRequest.getDate());
+            ret.add(new DummyContent.DummyItem(foodRequest.getMealName(), foodRequest.getMealsInfo(), reportDate));
+        }
+
+        return ret;
     }
 
     private List<FoodRequest> getHistoricRequest(){
@@ -353,6 +386,10 @@ public class MealStatsActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
+        FragmentManager fm = getFragmentManager();
+        if(fm.getBackStackEntryCount() == 0)
+            loadFragment(MealFragment.newInstance(2, foodRequestToDummyItem(getHistoricRequest())));
     }
 
     @Override
@@ -425,5 +462,10 @@ public class MealStatsActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        loadFragment(StatsFragment.newInstance(item.stats));
     }
 }
