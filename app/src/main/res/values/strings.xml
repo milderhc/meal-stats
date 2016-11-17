@@ -74,4 +74,5 @@
     <string name="calories_exceeded">You have been exceeded the number of calories recommended per day</string>
     <string name="calories_close_to_limit">You are close to the number of calories recommended per day</string>
     <string name="meal_added_to_diet">Meal added to your daily diet</string>
+    <string name="exercise_level">Exercise level</string>
 </resources>
