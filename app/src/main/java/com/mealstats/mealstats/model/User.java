@@ -16,8 +16,12 @@ public class User {
 
     private User.Activity activityLevel;
 
-    public User(String email) {
+    public User(String email, int height, int weight, int age, Activity activityLevel) {
         this.email = email;
+        this.height = height;
+        this.weight = weight;
+        this.age = age;
+        this.activityLevel = activityLevel;
     }
 
     public String getEmail() {
@@ -26,5 +30,37 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public Activity getActivityLevel() {
+        return activityLevel;
+    }
+
+    public void setActivityLevel(Activity activityLevel) {
+        this.activityLevel = activityLevel;
     }
 }
