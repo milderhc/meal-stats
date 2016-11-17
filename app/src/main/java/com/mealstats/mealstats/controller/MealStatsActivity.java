@@ -341,7 +341,7 @@ public class MealStatsActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(DummyMealInfo item) {
-        loadFragment(StatsFragment.newInstance(item.stats));
+        loadFragment(GeneralStatsFragment.newInstance(item.stats));
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
