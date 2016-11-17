@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity  implements
         }
     }
 
-    protected static User currentUser;
+    public static User currentUser;
     private SharedPreferences sharedPreferences;
 
     private boolean isLogged () {
@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity  implements
 
             //TODO get the real user
             currentUser = new User(userEmail);
+            currentUser.loadUserData(this);
 
             goToMainActivity();
             return true;

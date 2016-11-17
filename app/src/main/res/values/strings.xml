@@ -56,4 +56,23 @@
         <item>Get active and be a healthy weight</item>
         <item>Cut down on saturated fat and sugar</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="light">Light</string>
+    <string name="moderate">Moderate</string>
+    <string name="Active">Active</string>
+    <string name="save">Save</string>
+
+    <string name="eating_this">I\'m eating this</string>
+    <string name="settings_error">There is a format error, please review your values</string>
+    <string name="settings_updated">Data updated</string>
+    <string name="energy">Energy</string>
+    <string name="calories_exceeded">You have exceeded the number of calories recommended per day</string>
+    <string name="calories_close_to_limit">You are close to the number of calories recommended per day</string>
+    <string name="meal_added_to_diet">Meal added to your daily diet</string>
+    <string name="exercise_level">Exercise level</string>
 </resources>
