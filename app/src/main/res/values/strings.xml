@@ -69,9 +69,9 @@
 
     <string name="eating_this">I\'m eating this</string>
     <string name="settings_error">There is a format error, please review your values</string>
-    <string name="settings_updated">Updated</string>
+    <string name="settings_updated">Data updated</string>
     <string name="energy">Energy</string>
-    <string name="calories_exceeded">You have been exceeded the number of calories recommended per day</string>
+    <string name="calories_exceeded">You have exceeded the number of calories recommended per day</string>
     <string name="calories_close_to_limit">You are close to the number of calories recommended per day</string>
     <string name="meal_added_to_diet">Meal added to your daily diet</string>
     <string name="exercise_level">Exercise level</string>
