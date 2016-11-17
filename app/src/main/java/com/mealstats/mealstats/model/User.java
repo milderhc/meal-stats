@@ -8,6 +8,14 @@ import android.util.Log;
 public class User {
     private String email;
 
+    private int height, weight, age;
+
+    public static enum Activity {
+        Light, Moderate, Active
+    }
+
+    private User.Activity activityLevel;
+
     public User(String email) {
         this.email = email;
     }

@@ -96,16 +96,6 @@ public class FoodRetrievalFragment extends Fragment {
             recyclerView.setAdapter(new FoodRetrievalRecyclerViewAdapter(mealsNames, mListener));
         }
 
-        Log.d("fragment", "On create view");
-
-        //imageView = (ImageView) view.findViewById(R.id.test);
-        //imageView.setVisibility(View.VISIBLE);
-        //Bitmap bitmap = BitmapFactory.
-        //        decodeFile("/storage/emulated/0/Android/data/com.mealstats.mealstats/cache/img/img_to_analyze.jpg");
-        //imageView.setImageBitmap(bitmap);
-
-
-
         return view;
     }
 
