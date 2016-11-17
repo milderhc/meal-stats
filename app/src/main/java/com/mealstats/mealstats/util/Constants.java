@@ -25,11 +25,12 @@ public class Constants {
     public static final String AGE;
     public static final String ACTIVITY;
     public static final String GENDER;
-    public static final String MALE;
-    public static final String FEMALE;
-    public static final String LIGHT;
-    public static final String MODERATE;
-    public static final String ACTIVE;
+    public static final int MALE;
+    public static final int FEMALE;
+    public static final int LIGHT;
+    public static final int MODERATE;
+    public static final int ACTIVE;
+    public static final String CURRENT_DAY_CALORIES;
 
     public static final String FACEBOOK_FIRST_NAME;
     public static final String FACEBOOK_LASTNAME;
@@ -57,13 +58,13 @@ public class Constants {
         HEIGHT = "height";
         WEIGHT = "weight";
         GENDER = "gender";
+        CURRENT_DAY_CALORIES = "current_day_calories";
 
-
-        MALE = "male";
-        FEMALE = "female";
-        LIGHT = "light";
-        MODERATE = "moderate";
-        ACTIVE = "active";
+        MALE = 0;
+        FEMALE = 1;
+        LIGHT = 0;
+        MODERATE = 1;
+        ACTIVE = 2;
 
         FACEBOOK_FIRST_NAME = "first_name";
         FACEBOOK_LASTNAME = "last_name";

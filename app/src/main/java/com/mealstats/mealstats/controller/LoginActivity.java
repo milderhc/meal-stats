@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity  implements
         }
     }
 
-    protected static User currentUser;
+    public static User currentUser;
     private SharedPreferences sharedPreferences;
 
     private boolean isLogged () {
@@ -63,14 +63,10 @@ public class LoginActivity extends AppCompatActivity  implements
                                           Constants.IS_LOGGED_DEFAULT_VALUE) ) {
 
             String userEmail = sharedPreferences.getString(Constants.EMAIL, null);
-            String userAge = sharedPreferences.getString(Constants.AGE,null);
-            String userWeight = sharedPreferences.getString(Constants.WEIGHT,null);
-            String userHeight = sharedPreferences.getString(Constants.HEIGHT,null);
-            String userGender = sharedPreferences.getString(Constants.GENDER,null);
-            String userActivity = sharedPreferences.getString(Constants.ACTIVITY,null);
 
             //TODO get the real user
             currentUser = new User(userEmail);
+            currentUser.loadUserData(this);
 
             goToMainActivity();
             return true;

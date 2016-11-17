@@ -291,9 +291,17 @@ public class MealStatsActivity extends AppCompatActivity
         builder.show();
     }
 
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LoginActivity.currentUser.saveUserData(this);
+    }
+
     @Override
     public void onResume () {
         super.onResume();
+        LoginActivity.currentUser.loadUserData(this);
     }
 
     @Override
@@ -343,6 +351,7 @@ public class MealStatsActivity extends AppCompatActivity
     public void onListFragmentInteraction(DummyMealInfo item) {
         loadFragment(GeneralStatsFragment.newInstance(item.stats));
     }
+
 
 
 

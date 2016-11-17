@@ -1,6 +1,13 @@
 package com.mealstats.mealstats.model;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.RadioGroup;
+
+import com.mealstats.mealstats.R;
+import com.mealstats.mealstats.util.Constants;
 
 /**
  * Created by milder on 2/11/16.
@@ -13,10 +20,28 @@ public class User {
     private double currentDayCalories;
 
     public static enum Activity {
-        Light, Moderate, Active
+        Light(0), Moderate(1), Active(2);
+
+        private final int value;
+        private Activity (int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
     public static enum Genre {
-        Male, Female
+        Male(0), Female(1);
+
+        private final int value;
+        private Genre (int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 
     private User.Activity activityLevel;
@@ -27,15 +52,14 @@ public class User {
         currentDayCalories = 0;
     }
 
-    public User(String email, double height, double weight, double age, double requiredCalories, Activity activityLevel, Genre genre) {
+    public User(String email, double height, double weight, double age, double currentDayCalories, Activity activityLevel, Genre genre) {
         this.email = email;
         this.height = height;
         this.weight = weight;
         this.age = age;
-        this.requiredCalories = requiredCalories;
+        this.currentDayCalories = currentDayCalories;
         this.activityLevel = activityLevel;
         this.genre = genre;
-        currentDayCalories = 0;
         findCalories();
     }
 
@@ -129,4 +153,31 @@ public class User {
     public void setCurrentDayCalories(double currentDayCalories) {
         this.currentDayCalories = currentDayCalories;
     }
+
+    public void saveUserData (Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putFloat(Constants.AGE, (float)age);
+        editor.putFloat(Constants.WEIGHT, (float)weight);
+        editor.putFloat(Constants.HEIGHT, (float)height);
+        editor.putFloat(Constants.CURRENT_DAY_CALORIES, (float)currentDayCalories);
+        editor.putInt(Constants.ACTIVITY, activityLevel.getValue());
+        editor.putInt(Constants.GENDER, genre.getValue());
+        editor.commit();
+    }
+
+    public void loadUserData (Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        age = sharedPreferences.getFloat(Constants.AGE, 0);
+        weight = sharedPreferences.getFloat(Constants.WEIGHT, 0);
+        height = sharedPreferences.getFloat(Constants.HEIGHT, 0);
+        currentDayCalories = sharedPreferences.getFloat(Constants.CURRENT_DAY_CALORIES, 0);
+        activityLevel = Activity.values()[sharedPreferences.getInt(Constants.ACTIVITY, 0)];
+        genre = Genre.values()[sharedPreferences.getInt(Constants.GENDER, 0)];
+
+        findCalories();
+    }
+
 }

@@ -15,6 +15,7 @@
         android:layout_weight="0.20"
         android:id="@+id/eating_this_button"
         android:onClick="onClick"
+        android:textColor="@color/colorWhite"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
