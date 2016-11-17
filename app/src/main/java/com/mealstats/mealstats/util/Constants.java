@@ -35,6 +35,7 @@ public class Constants {
     public static final String FACEBOOK_FIRST_NAME;
     public static final String FACEBOOK_LASTNAME;
     public static final String FACEBOOK_EMAIL;
+    public static final String REQUESTS_HISTORY = "REQUESTS_HISTORY";
 
     static {
         NUTRITIONAL_INFO_ARGS = "NUTRITIONAL_INFO_ARGS";
