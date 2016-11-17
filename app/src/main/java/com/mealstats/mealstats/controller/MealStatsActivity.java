@@ -395,8 +395,7 @@ MealFragment.OnListFragmentInteractionListener{
             super.onBackPressed();
         }
 
-        FragmentManager fm = getFragmentManager();
-        if(fm.getBackStackEntryCount() == 0)
+        if(getSupportFragmentManager().getBackStackEntryCount() == 0)
             loadFragment(MealFragment.newInstance(2, foodRequestToDummyItem(getHistoricRequest())));
     }
 
