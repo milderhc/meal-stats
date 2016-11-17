@@ -414,6 +414,7 @@ MealFragment.OnListFragmentInteractionListener{
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            loadFragment(ConfigFragment.newInstance());
             return true;
         }
 
@@ -440,13 +441,8 @@ MealFragment.OnListFragmentInteractionListener{
         } else if (id == R.id.nav_gallery) {
             selectPicture();
         } else if (id == R.id.nav_settings) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.main_content, ConfigFragment.newInstance());
-            transaction.addToBackStack(null);
-            transaction.commit();
+            loadFragment(ConfigFragment.newInstance());
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_rate) {
 
         } else if (id == R.id.nav_about) {
 
