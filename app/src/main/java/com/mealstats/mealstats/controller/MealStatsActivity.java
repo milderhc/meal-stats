@@ -32,10 +32,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mealstats.mealstats.R;
 import com.mealstats.mealstats.controller.dummy.DummyMealInfo;
 import com.mealstats.mealstats.controller.foodList.FoodRetrievalFragment;
 import com.mealstats.mealstats.controller.statsList.StatsFragment;
+import com.mealstats.mealstats.model.FoodRequest;
 import com.mealstats.mealstats.services.GetNutritionalInfo;
 import com.mealstats.mealstats.util.Constants;
 
@@ -43,6 +46,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -239,13 +246,43 @@ public class MealStatsActivity extends AppCompatActivity
             initLoadingDialog();
             onRequestBackendDialog.show();
             infoService.sendRequest(filePath,
-                    (response -> loadFragment(FoodRetrievalFragment.newInstance(response))), //Remeber to handle errors appropiatley as are
+                    (response -> acceptResponse(response)), //Remeber to handle errors appropiatley as are
                     (errorResponse -> handleBackendError(errorResponse)), //defined in the backend.
                     (error -> handleVolleyError(error)));      //Any possible volley error
         } catch (FileNotFoundException e) {
             handleImageNotFoundError(e, filePath);
             //e.printrivStackTrace();
         }
+    }
+
+    public void acceptResponse(List<Map<String, String>> nutritionalInfo){
+        Map<String, String> stats = nutritionalInfo.get(0);
+        String mealName = stats.get(Constants.NAME_MEAL_STAT_RESPONSE);
+        storeRequest(stats, mealName);
+        loadFragment(FoodRetrievalFragment.newInstance(nutritionalInfo));
+        for(FoodRequest req : getHistoricRequest()){
+            Log.d("Xd", req.toString());
+        }
+    }
+
+    private List<FoodRequest> getHistoricRequest(){
+        Gson gson = new Gson();
+        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+        String json = mPrefs.getString(Constants.REQUESTS_HISTORY, "");
+        Type collectionType = new TypeToken<List<FoodRequest>>(){}.getType();
+        List<FoodRequest> requests = gson.fromJson(json, collectionType);
+        return requests != null ? requests : new ArrayList<>();
+    }
+
+    private void storeRequest(Map<String, String> mealInfo, String mealName){
+        SharedPreferences mPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        Gson gson = new Gson();
+        List<FoodRequest> requests = getHistoricRequest();
+        requests.add(new FoodRequest(mealInfo, mealName));
+        String json = gson.toJson(requests);
+        prefsEditor.putString(Constants.REQUESTS_HISTORY, json);
+        prefsEditor.commit();
     }
 
     private void handleBackendError(Map<String, String> errorResponse){
