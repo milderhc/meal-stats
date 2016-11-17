@@ -359,7 +359,7 @@ public class MealStatsActivity extends AppCompatActivity
             selectPicture();
         } else if (id == R.id.nav_settings) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.main_content, ConfigFragment.newInstance("",""));
+            transaction.replace(R.id.main_content, ConfigFragment.newInstance());
             transaction.addToBackStack(null);
             transaction.commit();
         } else if (id == R.id.nav_share) {
